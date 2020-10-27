@@ -209,7 +209,7 @@ So, the output in this example means that 'False' has type 'Bool'.
 > Try to guess first and then compare your expectations with GHCi output
 
 >>> :t True
-False :: Bool
+True :: Bool
 >>> :t 'a'
 'a' :: Char
 >>> :t 42
@@ -493,7 +493,7 @@ Implement a function that returns the last digit of a given number.
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
 
 lastDigit :: Int -> Int
-lastDigit n = mod n 10
+lastDigit n = mod (abs n) 10
 
 
 {- |
@@ -523,7 +523,13 @@ branches because it is an expression and it must always return some value.
   satisfying the check will be returned and, therefore, evaluated.
 -}
 closestToZero :: Int -> Int -> Int
-closestToZero x y = min (abs x) (abs y)
+closestToZero x y
+    | distantToZero x y == x = x
+    | distantToZero x y == y = y
+    | otherwise = - (distantToZero x y)
+    where
+        distantToZero :: Int -> Int -> Int
+        distantToZero x y = min (abs x) (abs y)
 
 
 {- |
@@ -559,10 +565,10 @@ Casual reminder about adding top-level type signatures for all functions :)
 
 mid :: Int -> Int -> Int -> Int
 mid x y z
-    | (x > y) && (y > z) = y
-    | (x > y) && (z > y) = min x z
-    | (y > x) && (x > z) = x
-    | (y > x) && (z > x) = min y z
+    | (x >= y) && (y >= z) = y
+    | (x >= y) && (z >= y) = min x z
+    | (y >= x) && (x >= z) = x
+    | (y >= x) && (z >= x) = min y z
 
 {- |
 =⚔️= Task 8
@@ -649,12 +655,12 @@ specifying complex expressions.
 -}
 
 sumLast2 :: Int -> Int 
-sumLast2 n = (last n) + (secondLast n)
+sumLast2 n = firstLast n + secondLast n
     where
-        last :: Int -> Int
-        last x = mod x 10
+        firstLast :: Int -> Int
+        firstLast x = mod (abs x) 10
         secondLast :: Int -> Int
-        secondLast x = div (mod x 100) 10
+        secondLast x = div (mod (abs x) 100) 10
 
 {- |
 =💣= Task 10*
@@ -676,8 +682,8 @@ aren't ready for this boss yet!
 
 firstDigit :: Int -> Int
 firstDigit n
-    | (mod n 10) == n = n
-    | otherwise = firstDigit (div n 10)
+    | mod (abs n) 10 == abs n = abs n
+    | otherwise = firstDigit (div (abs n) 10)
 -- easy
 
 {-
