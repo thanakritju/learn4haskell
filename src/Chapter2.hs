@@ -633,9 +633,8 @@ Write a function that takes elements of a list only on even positions.
 
 takeEven :: [Int] -> [Int]
 takeEven [] = []
-takeEven (x:xs)
-  | (mod (length xs) 2) == 0 = x : takeEven xs
-  | otherwise = takeEven xs
+takeEven [x] = [x]
+takeEven (x : _ : xs) = x : takeEven xs
 
 {- |
 =🛡= Higher-order functions
@@ -742,7 +741,7 @@ value of the element itself
 🕯 HINT: Use combination of 'map' and 'replicate'
 -}
 smartReplicate :: [Int] -> [Int]
-smartReplicate l = error "smartReplicate: Not implemented!"
+smartReplicate l = concatMap (\x -> replicate x x) l
 
 {- |
 =⚔️= Task 9
@@ -755,7 +754,8 @@ the list with only those lists that contain a passed element.
 
 🕯 HINT: Use the 'elem' function to check whether an element belongs to a list
 -}
-contains = error "contains: Not implemented!"
+contains :: Int -> [[Int]] -> [[Int]]
+contains n l = filter (\x -> elem n x) l
 
 
 {- |
@@ -795,13 +795,15 @@ Let's now try to eta-reduce some of the functions and ensure that we
 mastered the skill of eta-reducing.
 -}
 divideTenBy :: Int -> Int
-divideTenBy x = div 10 x
+divideTenBy = div 10
 
 -- TODO: type ;)
-listElementsLessThan x l = filter (< x) l
+listElementsLessThan :: Int -> [Int] -> [Int]
+listElementsLessThan x = filter (< x)
 
 -- Can you eta-reduce this one???
-pairMul xs ys = zipWith (*) xs ys
+pairMul :: [Int] -> [Int] -> [Int]
+pairMul = zipWith (*)
 
 {- |
 =🛡= Lazy evaluation
@@ -856,7 +858,10 @@ list.
 
 🕯 HINT: Use the 'cycle' function
 -}
-rotate = error "rotate: Not implemented!"
+rotate :: Int -> [Int] -> [Int]
+rotate n l
+    | n < 0 = []
+    | otherwise = take (length l) (drop n (cycle l))
 
 {- |
 =💣= Task 12*
@@ -872,7 +877,10 @@ and reverses it.
   function, but in this task, you need to implement it manually. No
   cheating!
 -}
-rewind = error "rewind: Not Implemented!"
+rewind :: [Int] -> [Int]
+rewind [] = []
+rewind [x] = [x]
+rewind (x:xs) = (rewind xs) ++ [x]
 
 
 {-
