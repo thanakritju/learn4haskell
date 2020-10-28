@@ -614,7 +614,8 @@ Implement a function that duplicates each element of the list
 
 -}
 duplicate :: [a] -> [a]
-duplicate = error "duplicate: Not implemented!"
+duplicate [] = []
+duplicate (x:xs) = [x, x] ++ duplicate xs
 
 
 {- |
@@ -629,7 +630,12 @@ Write a function that takes elements of a list only on even positions.
 >>> takeEven [2, 1, 3, 5, 4]
 [2,3,4]
 -}
-takeEven = error "takeEven: Not implemented!"
+
+takeEven :: [Int] -> [Int]
+takeEven [] = []
+takeEven (x:xs)
+  | (mod (length xs) 2) == 0 = x : takeEven xs
+  | otherwise = takeEven xs
 
 {- |
 =🛡= Higher-order functions
